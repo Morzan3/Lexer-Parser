@@ -23,10 +23,11 @@ def get_file_content():
         arguments.append(arg)
 
 
-    if len(arguments) != 2:
-        sys.exit("Nie została podana sciezka do pliku lub zostala podana niepoprawnie")
+    # if len(arguments) != 2:
+    #     sys.exit("Nie została podana sciezka do pliku lub zostala podana niepoprawnie")
 
-    file_path = arguments[1]
+    #file_path = arguments[1]
+    file_path = 'html_file.html'
     html_file = open(file_path, 'r')
 
     file_lines = []
@@ -44,14 +45,15 @@ file = get_file_content()
 lexer = Lexer(file)
 
 #parser = Parser(lexer)
+#parser.checkIfTokenExpected(TokenType.close_tag)
 
 while True:
-# #for i in range(0, 1105):
-    if lexer.return_next_token == 1:
-        break
+#for i in range(0, 1105):
+   if lexer.return_next_token == 1:
+       break
 #
 lexer.print_tags()
-# for line in lexer.token_list:
-#     output_file.write(line.type.name + ' ' + line.value + '\n')
-#
-# output_file.close()
+for line in lexer.token_list:
+    output_file.write(line.type.name + ' ' + line.value + '\n')
+
+output_file.close()

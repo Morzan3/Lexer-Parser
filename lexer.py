@@ -5,11 +5,10 @@ class TokenType(Enum):
     opening_tag = 1
     close_tag = 2
     opening_end_tag = 3
-    close_end_tag = 4
-    quotation_mark = 5
-    equal_sign = 6
-    text = 7
-    doctype = 8
+    quotation_mark = 4
+    equal_sign = 5
+    text = 6
+    doctype = 7
 
 
 def is_correct(regexp_def, correct_end_states, value):
@@ -43,10 +42,6 @@ def is_close_tag(value):
 
 def is_opening_end_tag(value):
     return value == '</'
-
-
-def is_close_end_tag(value):
-    return value == '/>'
 
 
 def is_quotation_mark(value):
@@ -103,7 +98,6 @@ class Token:
         TokenType.opening_tag: is_opening_tag,
         TokenType.close_tag: is_close_tag,
         TokenType.opening_end_tag: is_opening_end_tag,
-        TokenType.close_end_tag: is_close_end_tag,
         TokenType.quotation_mark: is_quotation_mark,
         TokenType.equal_sign: is_equal_sign,
         TokenType.text: is_text,
@@ -125,7 +119,7 @@ class Token:
             else:
                 raise ErrorMessage(line_number, line_char_number, value)
         else:
-            for token_value in range(1, 8):
+            for token_value in range(1, 7):
                 checking_function2 = self.__token_values[TokenType(token_value)]
                 token_type = TokenType(token_value)
                 if checking_function2(value):
@@ -162,7 +156,7 @@ class Lexer:
                 for var in range(line_char_number, len(line)):
                     if line[var] == '>':
                         self.token_list.append(
-                            Token(line[start_of_token:var + 1], line_number, start_of_token, True, 8))
+                            Token(line[start_of_token:var + 1], line_number, start_of_token, True, 7))
                         self.current_line_char_number = var + 1
                         return self.token_list[-1]
                     elif line_char_number == len(line):
@@ -191,12 +185,6 @@ class Lexer:
             self.token_list.append(Token(line[line_char_number], line_number, line_char_number))
             self.current_line_char_number += 1
             return self.token_list[-1]
-        elif line[line_char_number] == '/' and line[line_char_number - 1] != '"':
-            if (line[line_char_number:line_char_number + 2]) == '/>':
-                self.token_list.append(
-                    Token(line[line_char_number:line_char_number + 2], line_number, line_char_number))
-                self.current_line_char_number = line_char_number + 2
-                return self.token_list[-1]
         elif is_close_tag(line[line_char_number]):
             self.token_list.append(Token(line[line_char_number], line_number, line_char_number))
             self.current_line_char_number = line_char_number + 1
@@ -207,7 +195,7 @@ class Lexer:
                             line[line_char_number - 1] == '/' and line[line_char_number - 2] == '<'):
                 for var in range(line_char_number, len(line)):
                     if (line[var]) == ' ' or (line[var]) == '>':
-                        self.token_list.append(Token(line[start_of_token:var], line_number, start_of_token, True, 7))
+                        self.token_list.append(Token(line[start_of_token:var], line_number, start_of_token, True, 6))
                         self.current_line_char_number = var
                         return self.token_list[-1]
             if ((line[self.current_line_char_number - 1] == ' ') and (line[
@@ -221,7 +209,7 @@ class Lexer:
                     for var in range(self.current_line_char_number, len(line)):
                         if (line[var]) == '=':
                             self.token_list.append(
-                                Token(line[start_of_token:var], line_number, start_of_token, True, 7))
+                                Token(line[start_of_token:var], line_number, start_of_token, True, 6))
                             self.current_line_char_number = var
                             return self.token_list[-1]
             if line[line_char_number - 1] == '"' or line[line_char_number - 1] == ' ':
@@ -234,7 +222,7 @@ class Lexer:
                     for var in range(line_char_number, len(line)):
                         if (line[var]) == '"':
                             self.token_list.append(
-                                Token(line[start_of_token:var], line_number, start_of_token, True, 7))
+                                Token(line[start_of_token:var], line_number, start_of_token, True, 6))
                             self.current_line_char_number = var
                             return self.token_list[-1]
             if (line[self.current_line_char_number - 1] == ' ') or (line[self.current_line_char_number - 1] == '>'):
@@ -271,7 +259,7 @@ class Lexer:
                             start_of_token = 0
                         if (line[var]) == '<':
                             ending_string = ending_string + line[start_of_token:var]
-                            self.token_list.append(Token(ending_string, line_number, start_of_token, True, 7))
+                            self.token_list.append(Token(ending_string, line_number, start_of_token, True, 6))
                             self.current_line_char_number = var
                             return self.token_list[-1]
                         var += 1
