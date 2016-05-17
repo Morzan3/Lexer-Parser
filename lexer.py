@@ -9,6 +9,7 @@ class TokenType(Enum):
     equal_sign = 5
     text = 6
     doctype = 7
+    end_of_file = 8
 
 
 def is_correct(regexp_def, correct_end_states, value):
@@ -54,9 +55,9 @@ def is_equal_sign(value):
 
 def is_text(value):
     """
-        Function can take various sign depending on the occasion, another part of Lexer
-        is taking care for the proper value parameter.
-        """
+    Function can take various sign depending on the occasion, another part of Lexer
+    is taking care for the proper value parameter.
+    """
     return True
 
 
@@ -85,6 +86,8 @@ def is_doctype(value):
     correct_end_states = {4}
     return is_correct(regexp_def, correct_end_states, value)
 
+def file_end(value):
+    return True
 
 class ErrorMessage(Exception):
     def __init__(self, line_number, line_char_number, value):
@@ -102,6 +105,7 @@ class Token:
         TokenType.equal_sign: is_equal_sign,
         TokenType.text: is_text,
         TokenType.doctype: is_doctype,
+        TokenType.end_of_file: file_end,
     }
 
     def __init__(self, value, line_number, line_char_number, force_token=False
@@ -143,7 +147,7 @@ class Lexer:
         if (self.current_line_number == len(self.file)) or (
                         self.current_line_number == len(self.file) - 1 and self.current_line_char_number == len(
                     self.file[self.current_line_number])):
-            return 1
+            return Token(self.file[self.current_line_number - 1], self.current_line_number, self.current_line_char_number, True, 8)
 
         line_char_number = self.current_line_char_number
         line = self.file[self.current_line_number]
@@ -205,9 +209,9 @@ class Lexer:
                     if line[go_back_index] != ' ':
                         break
                     go_back_index -= 1
-                if ord('a') - 1 < ord(line[go_back_index]) < ord('z') - 1 or line[go_back_index] == '"':
+                if ord('a') - 1 < ord(line[go_back_index]) < ord('z') + 1 or line[go_back_index] == '"':
                     for var in range(self.current_line_char_number, len(line)):
-                        if (line[var]) == '=':
+                        if not((line[var]) == '-' or (ord('a') - 1 < ord(line[var]) < ord('z') + 1)):
                             self.token_list.append(
                                 Token(line[start_of_token:var], line_number, start_of_token, True, 6))
                             self.current_line_char_number = var
@@ -263,9 +267,9 @@ class Lexer:
                             self.current_line_char_number = var
                             return self.token_list[-1]
                         var += 1
-        print('Lexetr nie znalazł żadnego pasującego tokenu w linii:', self.current_line_number, 'znak:',
-              self.current_line_char_number)
-        self.current_line_char_number += 1
+        print('Lexetr nie znalazł żadnego pasującego tokenu w linii:', self.current_line_number + 1, 'znak:',
+              self.current_line_char_number + 1)
+
 
     def print_lines(self):
         for line in self.file:

@@ -1,21 +1,13 @@
+import sys
 from lexer import *
 
 
 class Parser:
     def __init__(self, lexer):
         self.lexer = lexer
-        self.current_token
+        self.current_token = None
 
 
-
-    def parseDocument(self):
-
-
-        if self.checkIfTokenExpected(TokenType.doctype):
-            self.current_token = self.lexer.return_next_token
-            if self.checkIfTokenExpected(TokenType.opening_tag):
-                self.current_token = self.lexer.return_next_token
-                self.checkIfTokenExpected()
 
     def start(self):
         self.current_token = self.lexer.return_next_token
@@ -25,35 +17,41 @@ class Parser:
         self.tag()
 
     def tag(self):
-        if not(self.checkIfTokenExpected(TokenType.opening_tag)):
-            raise SystemExit
-        self.current_token = self.lexer.return_next_token
-        if not(self.checkIfTokenExpected(TokenType.text)):
-            raise SystemExit
-        self.attributes()
+        if self.current_token.type == TokenType.opening_end_tag:
+            self.current_token = self.lexer.return_next_token
+            if not(self.checkIfTokenExpected(TokenType.text)):
+                raise SystemExit
+            self.current_token = self.lexer.return_next_token
+            if not (self.checkIfTokenExpected(TokenType.close_tag)):
+                raise SystemExit
+            self.tag_closure()
+        elif self.checkIfTokenExpected(TokenType.opening_tag, " or opening end_tag_expected"):
+            self.current_token = self.lexer.return_next_token
+            if not(self.checkIfTokenExpected(TokenType.text)):
+                raise SystemExit
+            self.current_token = self.lexer.return_next_token
+            if self.current_token.type == TokenType.text:
+                self.attributes()
+            self.tag_closure()
 
     def tag_closure(self):
-        if self.checkIfTokenExpected(TokenType.close_end_tag):
-            self.self_closure_tag()
-
-
-    def self_closure_tag(self):
-        self.current_token = self.lexer.return_next_token
-        if self.current_token == TokenType.text:
+        if self.checkIfTokenExpected(TokenType.close_tag):
+            if self.current_token.type == TokenType.end_of_file:
+                sys.exit("Natrafiono na koniec pliku, parsowanie zaończono powodzeniem")
             self.current_token = self.lexer.return_next_token
-            self.tag()
+            if self.current_token.type == TokenType.text:
+                self.current_token = self.lexer.return_next_token
+                self.tag()
+            elif self.current_token.type == TokenType.opening_tag or self.current_token.type == TokenType.opening_end_tag:
+                self.tag()
 
-        if self.checkIfTokenExpected(TokenType.opening_tag, "or TokenType.text"):
-            self.tag()
 
     def attributes(self):
-        self.current_token = self.lexer.return_next_token
-
-        while self.current_token == TokenType.text:
+        while self.current_token.type == TokenType.text:
             self.attribute()
 
     def attribute(self):
-        if self.current_token == TokenType.text:
+        if self.checkIfTokenExpected(TokenType.text):
             self.current_token = self.lexer.return_next_token
             self.checkIfTokenExpected(TokenType.equal_sign)
             self.current_token = self.lexer.return_next_token
@@ -68,11 +66,14 @@ class Parser:
     def checkIfTokenExpected(self, expected_token_type, optional_message=''):
          if self.current_token.type != expected_token_type:
              error_message = "Unexpected token occured"
-             error_message = error_message + "Token occured: " + self.current_token.type.name
-             error_message = error_message + "Token expected: " + expected_token_type.name
-             error_message = error_message + optional_message
+             error_message = error_message + " Token occured: " + self.current_token.type.name
+             error_message = error_message + " Token expected: " + expected_token_type.name
+             error_message = error_message + optional_message + self.current_token.value
+             error_message = error_message
              print(error_message)
-             return False
+             print(self.current_token.line_number + 1)
+             print(self.current_token.line_char_number + 1)
+             raise SystemExit
          return True
 
 

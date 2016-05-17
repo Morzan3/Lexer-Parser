@@ -2,6 +2,7 @@ import sys
 import requests
 from lexer import *
 from Parser import *
+sys.setrecursionlimit(28500)
 
 
 def get_web_content():
@@ -27,7 +28,7 @@ def get_file_content():
     #     sys.exit("Nie została podana sciezka do pliku lub zostala podana niepoprawnie")
 
     #file_path = arguments[1]
-    file_path = 'html_file.html'
+    file_path = 'html_file2.html'
     html_file = open(file_path, 'r')
 
     file_lines = []
@@ -44,14 +45,14 @@ file = get_file_content()
 
 lexer = Lexer(file)
 
-#parser = Parser(lexer)
-#parser.checkIfTokenExpected(TokenType.close_tag)
+parser = Parser(lexer)
+parser.start()
 
-while True:
-#for i in range(0, 1105):
-   if lexer.return_next_token == 1:
-       break
-#
+# #while True:
+# for i in range(0, 207):
+#   if lexer.return_next_token.type == TokenType.end_of_file:
+#       break
+
 lexer.print_tags()
 for line in lexer.token_list:
     output_file.write(line.type.name + ' ' + line.value + '\n')
