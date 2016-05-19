@@ -1,8 +1,9 @@
-import sys
 import requests
 from lexer import *
 from Parser import *
 
+malware_family_filter = ""
+server_role_filter = ""
 
 def get_web_content():
     url = "http://ransomwaretracker.abuse.ch/tracker/"
@@ -23,11 +24,7 @@ def get_file_content():
         arguments.append(arg)
 
 
-    # if len(arguments) != 2:
-    #     sys.exit("Nie została podana sciezka do pliku lub zostala podana niepoprawnie")
-
-    #file_path = arguments[1]
-    file_path = 'html_file_download.html'
+    file_path = arguments[1]
     html_file = open(file_path, 'r')
 
     file_lines = []
@@ -36,24 +33,59 @@ def get_file_content():
 
     return file_lines
 
-output_file = open('outputfile.txt', 'w')
+def check_filtration():
+    global malware_family_filter, server_role_filter
+    arguments = []
+
+    for arg in sys.argv:
+        arguments.append(arg)
+
+    if len(arguments) > 1:
+        i = 0
+        while i <len(arguments):
+            if arguments[i] == '-m':
+                malware_family_filter = arguments[i+1]
+                i += 2
+                continue
+            if arguments[i] == '-r':
+                server_role_filter = arguments[i+1]
+                i += 2
+                continue
+            i += 1
 
 
-file = get_file_content()
-#file = get_web_content()
+def convert_role(server_role):
+    if server_role == "":
+        return server_role
+    if server_role == "BotnetC&C":
+        server_role = "Botnet C&amp;C"
+        return  server_role
+    elif server_role == "PaymentSite":
+        server_role = "Payment Site"
+        return server_role
+    elif server_role == "DistributionSite":
+        server_role = "Distribution Site"
+        return  server_role
+
+
+
+#file = get_file_content()
+file = get_web_content()
 
 lexer = Lexer(file)
 
-parser = Parser(lexer)
+check_filtration()
+server_role_filter = convert_role(server_role_filter)
+
+parser = Parser(lexer, malware_family_filter, server_role_filter)
 parser.start()
 
-# while True:
-# #for i in range(0, 207):
-#   if lexer.return_next_token.type == TokenType.end_of_file:
-#       break
+print("Liczba znaleziony serverów zgodnych z zapytaniem: " + str(len(parser.servers)))
 
-lexer.print_tags()
-for line in lexer.token_list:
-    output_file.write(line.type.name + ' ' + line.value + '\n')
-
+#Zapisywanie do pliku
+output_file = open('Lista serverow.txt', 'w')
+output_file.write('{"Serwers":[\n')
+for line in parser.servers:
+    output_file.write('{"addingDate":"' + line.date + '","threatType":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"},\n')
+output_file.write(']}')
 output_file.close()
