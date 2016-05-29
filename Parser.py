@@ -197,5 +197,6 @@ class Server:
             self.ip_adress = self.ip_adress[0:len(self.ip_adress)-1]
         if self.ip_adress[-1] == ' ':
             self.ip_adress = self.ip_adress[0:len(self.ip_adress)-1]
-
+        if self.server_role == "Botnet C&amp;C":
+            self.server_role = "Botnet C&C"
 
