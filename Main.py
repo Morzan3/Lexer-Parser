@@ -5,34 +5,6 @@ from Parser import *
 malware_family_filter = ""
 server_role_filter = ""
 
-def get_web_content():
-    url = "http://ransomwaretracker.abuse.ch/tracker/page/1/"
-    r = requests.get(url)
-    file_lines = []
-    string = ""
-
-    for line in r.text:
-        string = string + line
-        if line == chr(10):
-            file_lines.append(string)
-            string = ""
-    return file_lines
-
-def get_file_content():
-    arguments = []
-    for arg in sys.argv:
-        arguments.append(arg)
-
-
-    file_path = arguments[1]
-    html_file = open(file_path, 'r')
-
-    file_lines = []
-    for line in html_file:
-        file_lines.append(line)
-
-    return file_lines
-
 def check_filtration():
     global malware_family_filter, server_role_filter
     arguments = []
@@ -53,7 +25,6 @@ def check_filtration():
                 continue
             i += 1
 
-
 def convert_role(server_role):
     if server_role == "":
         return server_role
@@ -68,28 +39,99 @@ def convert_role(server_role):
         return  server_role
 
 
+def get_web_content(url):
+    #url = "http://ransomwaretracker.abuse.ch/tracker/"
+    r = requests.get(url)
+    file_lines = []
+    string = ""
 
-#file = get_file_content()
-file = get_web_content()
+    for line in r.text:
+        string = string + line
+        if line == chr(10):
+            file_lines.append(string)
+            string = ""
+    return file_lines
 
 
-lexer = Lexer(file)
+def get_all_the_pages():
+    global server_role_filter
+    global malware_family_filter
+    servers = []
 
-check_filtration()
-server_role_filter = convert_role(server_role_filter)
+    for page_number in range(0,12):
 
-parser = Parser(lexer, malware_family_filter, server_role_filter)
-parser.start()
+        if page_number == 0:
+            url = "http://ransomwaretracker.abuse.ch/tracker/"
+        else:
+            url = "http://ransomwaretracker.abuse.ch/tracker/page/"
+            url = url + str(page_number) + "/"
+        file = get_web_content(url)
+        lexer = Lexer(file)
 
-print("Liczba znalezionych serverów zgodnych z zapytaniem: " + str(len(parser.servers)))
+        check_filtration()
+        server_role_filter = convert_role(server_role_filter)
 
-#Zapisywanie do pliku
-output_file = open('Lista serverow.txt', 'w')
-output_file.write('{"Serwers":[\n')
-for n,line in enumerate(parser.servers):
-    if n == len(parser.servers) - 1:
-        output_file.write('{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"}\n')
-    else:
-        output_file.write('{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"},\n')
-output_file.write(']}')
-output_file.close()
+        parser = Parser(lexer, malware_family_filter, server_role_filter)
+        parser.start()
+
+        if page_number == 0:
+            servers = parser.servers
+        else:
+            servers = servers + parser.servers
+
+    output_file = open('Lista serverow.txt', 'w')
+    output_file.write('{"Serwers":[\n')
+    for n, line in enumerate(servers):
+        if n == len(servers) - 1:
+            output_file.write(
+                '{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"}\n')
+        else:
+            output_file.write(
+                '{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"},\n')
+    output_file.write(']}')
+    output_file.close()
+
+
+def get_file_content():
+    arguments = []
+    for arg in sys.argv:
+        arguments.append(arg)
+
+
+    file_path = arguments[1]
+    html_file = open(file_path, 'r')
+
+    file_lines = []
+    for line in html_file:
+        file_lines.append(line)
+
+    return file_lines
+
+
+get_all_the_pages()
+
+
+# #file = get_file_content()
+# file = get_web_content()
+#
+#
+# lexer = Lexer(file)
+#
+# check_filtration()
+# server_role_filter = convert_role(server_role_filter)
+#
+# parser = Parser(lexer, malware_family_filter, server_role_filter)
+# parser.start()
+#
+# print("Liczba znalezionych serverów zgodnych z zapytaniem: " + str(len(parser.servers)))
+#
+# #Zapisywanie do pliku
+# output_file = open('Lista serverow.txt', 'w')
+# output_file.write('{"Serwers":[\n')
+# for n,line in enumerate(parser.servers):
+#     if n == len(parser.servers) - 1:
+#         output_file.write('{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"}\n')
+#     else:
+#         output_file.write('{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"},\n')
+# output_file.write(']}')
+# output_file.close()

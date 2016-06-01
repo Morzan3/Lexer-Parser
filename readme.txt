@@ -46,3 +46,7 @@ Update 29.05.2016
 Początkowa strona zawierająca jedną tabelę ze wszystkimi serwerami została podzielona na 11 pod-stron.
 W celu pobrania N-tej strony należy zmodyfikować 9 linię pliku Main.py:
     url = "http://ransomwaretracker.abuse.ch/tracker/page/N/" gdzie N to numer naszej żądanej strony.
+
+Update 1.06.2016
+Program pobiera i parsuje 12 oddzielnych plików HTML, które składają się na całość tabeli.
+Z powodu ilości stron zajmuje to jednak trochę czasu.
