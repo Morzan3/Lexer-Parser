@@ -50,3 +50,6 @@ W celu pobrania N-tej strony należy zmodyfikować 9 linię pliku Main.py:
 Update 1.06.2016
 Program pobiera i parsuje 12 oddzielnych plików HTML, które składają się na całość tabeli.
 Z powodu ilości stron zajmuje to jednak trochę czasu.
+
+Update 04.06.2016
+Program pobiera określoną przez użytkownika liczbę stron tabeli + pierwszą domyślną nie uwzględnioną przy numeracji tabeli.

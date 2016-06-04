@@ -53,12 +53,12 @@ def get_web_content(url):
     return file_lines
 
 
-def get_all_the_pages():
+def get_specific_number_the_pages(number_of_pages = 0):
     global server_role_filter
     global malware_family_filter
     servers = []
 
-    for page_number in range(0,12):
+    for page_number in range(0,int(number_of_pages) + 1):
 
         if page_number == 0:
             url = "http://ransomwaretracker.abuse.ch/tracker/"
@@ -108,30 +108,7 @@ def get_file_content():
     return file_lines
 
 
-get_all_the_pages()
 
+number_of_pages = input("Podaj liczbę stron, którą chcesz pobrać \n")
+get_specific_number_the_pages(number_of_pages)
 
-# #file = get_file_content()
-# file = get_web_content()
-#
-#
-# lexer = Lexer(file)
-#
-# check_filtration()
-# server_role_filter = convert_role(server_role_filter)
-#
-# parser = Parser(lexer, malware_family_filter, server_role_filter)
-# parser.start()
-#
-# print("Liczba znalezionych serverów zgodnych z zapytaniem: " + str(len(parser.servers)))
-#
-# #Zapisywanie do pliku
-# output_file = open('Lista serverow.txt', 'w')
-# output_file.write('{"Serwers":[\n')
-# for n,line in enumerate(parser.servers):
-#     if n == len(parser.servers) - 1:
-#         output_file.write('{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"}\n')
-#     else:
-#         output_file.write('{"addingDate":"' + line.date + '","serverRole":"' + line.server_role + '","malwareFamily":"' + line.malware_family + '","hostAdress":"' + line.host_adress + '","ipAdress":"' + line.ip_adress + '"},\n')
-# output_file.write(']}')
-# output_file.close()
