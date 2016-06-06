@@ -12,7 +12,7 @@ Filtrowanie po rodzinie złośliwego oprogramowania:
 -m "<Nazwa rodziny>"
 
 W przypadku błędnego podania nazwy lub podania nazwy, która nie występuje na stronie żadne informacje nie zostaną zapisane do pliku.
-Filtrowanie tylko po jednej nazwie naraz jest możliwe.
+Filtrowanie tylko po jednej rodzinie złośliwego oprogramowania naraz jest możliwe.
 
 Poglądowa lista obecnie możliwych nazw (tych, które znajdują się na stronie, w przypadku dodania nowych filtrowanie po nich jest również możliwe):
 "TeslaCrypt"
@@ -27,19 +27,17 @@ Poglądowa lista obecnie możliwych nazw (tych, które znajdują się na stronie
 Przykład użycia: python3 Main.py -m "Locky"
 
 Filtrowanie po roli serwera:
--r "<rola serwera>"   //Rola serwera powinna zostać zapisana dokładnie tak jak na stronie internetowej.
+-r "<rola serwera>"   
 
-Możliwe parametry:
+Możliwe parametry (te, które znajdują się na stronie, w przypadku dodania nowych filtrowanie po nich jest również możliwe):
 "Distribution Sites"
 "Botnet C&C"
 "Payment Sites"
 
 Przykład użycia: python3 Main.py -r "PaymentSite"
 
-
 Możliwe jest jednoczesne filtrowanie po rodzinie zagrożenia oraz roli serwera.
 Przykład użycia: python3 Main.py -m "Locky" -r "Distribution Site"
-
 
 
 Update 29.05.2016
