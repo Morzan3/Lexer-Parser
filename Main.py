@@ -40,7 +40,6 @@ def convert_role(server_role):
 
 
 def get_web_content(url):
-    #url = "http://ransomwaretracker.abuse.ch/tracker/"
     r = requests.get(url)
     file_lines = []
     string = ""
@@ -53,7 +52,7 @@ def get_web_content(url):
     return file_lines
 
 
-def get_specific_number_the_pages(number_of_pages = 0):
+def get_specific_number_of_pages(number_of_pages = 0):
     global server_role_filter
     global malware_family_filter
     servers = []
@@ -110,5 +109,5 @@ def get_file_content():
 
 
 number_of_pages = input("Podaj liczbę stron, którą chcesz pobrać \n")
-get_specific_number_the_pages(number_of_pages)
+get_specific_number_of_pages(number_of_pages)
 
