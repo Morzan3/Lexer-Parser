@@ -1,4 +1,4 @@
-Program dokonujący analizy lexykalner oraz składniowej pliku html strony http://ransomwaretracker.abuse.ch/tracker/.
+Program dokonujący analizy lexykalnej oraz składniowej pliku html strony http://ransomwaretracker.abuse.ch/tracker/.
 Po dokonaniu analizy program zapisuje informacje (datę dodania, rolę serwera, rodzinę malwaru, adres hosta oraz adres ip)
 o wybranych serwerach do pliku w formacie JSON.
 
