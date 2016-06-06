@@ -28,15 +28,11 @@ def check_filtration():
 def convert_role(server_role):
     if server_role == "":
         return server_role
-    if server_role == "BotnetC&C":
+    if server_role == "Botnet C&C":
         server_role = "Botnet C&amp;C"
-        return  server_role
-    elif server_role == "PaymentSite":
-        server_role = "Payment Site"
         return server_role
-    elif server_role == "DistributionSite":
-        server_role = "Distribution Site"
-        return  server_role
+    else:
+        return server_role
 
 
 def get_web_content(url):

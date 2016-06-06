@@ -14,31 +14,31 @@ Filtrowanie po rodzinie złośliwego oprogramowania:
 W przypadku błędnego podania nazwy lub podania nazwy, która nie występuje na stronie żadne informacje nie zostaną zapisane do pliku.
 Filtrowanie tylko po jednej nazwie naraz jest możliwe.
 
-Lista możliwych nazw:
-TeslaCrypt
-CryptoWall
-TorrentLocker
-PadCrypt
-Locky
-CTB-Locker
-FAKBEN
-PayCrypt
+Poglądowa lista obecnie możliwych nazw (tych, które znajdują się na stronie, w przypadku dodania nowych filtrowanie po nich jest również możliwe):
+"TeslaCrypt"
+"CryptoWall"
+"TorrentLocker"
+"PadCrypt"
+"Locky"
+"CTB-Locker"
+"FAKBEN"
+"PayCrypt"
 
 Przykład użycia: python3 Main.py -m "Locky"
 
 Filtrowanie po roli serwera:
--r "<rola serwera>"   //Rola serwera powinna zostać zapisana bez użycia spacji.
+-r "<rola serwera>"   //Rola serwera powinna zostać zapisana dokładnie tak jak na stronie internetowej.
 
 Możliwe parametry:
-DistributionSites
-BotnetC&Cs
-PaymentSites
+"Distribution Sites"
+"Botnet C&C"
+"Payment Sites"
 
 Przykład użycia: python3 Main.py -r "PaymentSite"
 
 
 Możliwe jest jednoczesne filtrowanie po rodzinie zagrożenia oraz roli serwera.
-Przykład użycia: python3 Main.py -m "Locky" -r "DistributionSite"
+Przykład użycia: python3 Main.py -m "Locky" -r "Distribution Site"
 
 
 
@@ -52,4 +52,4 @@ Program pobiera i parsuje 12 oddzielnych plików HTML, które składają się na
 Z powodu ilości stron zajmuje to jednak trochę czasu.
 
 Update 04.06.2016
-Program pobiera określoną przez użytkownika liczbę stron tabeli + pierwszą domyślną nie uwzględnioną przy numeracji tabeli.
+Program pobiera określoną przez użytkownika liczbę stron tabeli + pierwszą domyślną nie uwzględnioną na stronie internetowej przy numeracji tabeli.
