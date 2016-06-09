@@ -23,7 +23,7 @@ def is_correct(regexp_def, correct_end_states, value):
     """
 
     state = 0
-    for i in value:  # Going through the string checking each char
+    for i in value:
         try:
             state = regexp_def[state][i]
         except KeyError:
@@ -75,7 +75,7 @@ def is_doctype(value):
 
     state_3 = {}
 
-    for char in range(32, 126 + 1):  # all keyboard chars without "
+    for char in range(32, 126 + 1):
         if char != 62:
             state_3[chr(char)] = 3
     state_3['>'] = 4
@@ -170,7 +170,7 @@ class Lexer:
                         self.current_line_char_number = var + 1
                         return self.token_list[-1]
                     elif line_char_number == len(line):
-                        print('Nie znaleziono nawiasu domknięcia DOCTYPE')
+                        print('Nie znaleziono nawiasu domkniecia DOCTYPE')
             elif is_opening_end_tag(line[line_char_number:line_char_number + 2]):
                 self.token_list.append(
                     Token(line[line_char_number:line_char_number + 2], line_number, line_char_number))
@@ -187,7 +187,7 @@ class Lexer:
             self.current_line_number += 1
             self.current_line_char_number = 0
             return self.return_next_token
-        elif is_equal_sign(line[line_char_number]):  # znak równości
+        elif is_equal_sign(line[line_char_number]):
             self.token_list.append(Token(line[line_char_number], line_number, line_char_number))
             self.current_line_char_number += 1
             return self.token_list[-1]
@@ -215,7 +215,7 @@ class Lexer:
                         self.current_line_char_number = var
                         return self.token_list[-1]
             if ((line[self.current_line_char_number - 1] == ' ') and (line[
-                                                                              self.current_line_char_number - 2] != '>') and self.current_line_char_number != 1):  # html_attribute
+                                                                              self.current_line_char_number - 2] != '>') and self.current_line_char_number != 1):
                 go_back_index = self.current_line_char_number - 1
                 while go_back_index >= 0:
                     if line[go_back_index] != ' ':
@@ -279,7 +279,7 @@ class Lexer:
                             self.current_line_char_number = var
                             return self.token_list[-1]
                         var += 1
-        print('Lexetr nie znalazł żadnego pasującego tokenu w linii:', self.current_line_number + 1, 'znak:',
+        print('Lexer nie znalazl zadnego pasujacego tokenu w linii:', self.current_line_number + 1, 'znak:',
               self.current_line_char_number + 1)
 
 

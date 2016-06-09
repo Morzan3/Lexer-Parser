@@ -59,7 +59,7 @@ class Parser:
                 return
             elif self.current_token.type == TokenType.end_of_file:
                 self.check_token_order()
-                print("Natrafiono na koniec pliku, parsowanie zakończono powodzeniem")
+                print("Natrafiono na koniec pliku, parsowanie zakonczono powodzeniem")
                 return
             print("Unexpected token occured. Token occured: ", self.current_token.type.name, "Token expected: text or opening tag or opening end_tag")
             sys.exit()

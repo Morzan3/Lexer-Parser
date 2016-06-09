@@ -4,9 +4,11 @@ from Parser import *
 
 malware_family_filter = ""
 server_role_filter = ""
+number_of_pages = 0
+output_file_name = "Lista serwerow.txt"
 
 def check_filtration():
-    global malware_family_filter, server_role_filter
+    global malware_family_filter , server_role_filter, number_of_pages, output_file_name
     arguments = []
 
     for arg in sys.argv:
@@ -14,16 +16,29 @@ def check_filtration():
 
     if len(arguments) > 1:
         i = 0
-        while i < len(arguments):
-            if arguments[i] == '-m':
-                malware_family_filter = arguments[i+1]
-                i += 2
-                continue
-            if arguments[i] == '-r':
-                server_role_filter = arguments[i+1]
-                i += 2
-                continue
-            i += 1
+        try :
+            while i < len(arguments):
+                if arguments[i] == '-m':
+                    malware_family_filter = arguments[i+1]
+                    i += 2
+                    continue
+                if arguments[i] == '-r':
+                    server_role_filter = arguments[i+1]
+                    i += 2
+                    continue
+                if arguments[i] == '-n':
+                    number_of_pages = int(arguments[i+1])
+                    i += 2
+                    continue
+                if arguments[i] == '-o':
+                    output_file_name = arguments[i+1]
+                    i += 2
+                    continue
+                i += 1
+        except IndexError:
+            print("Podano bledne parametry wywolania programu")
+            sys.exit()
+
 
 def convert_role(server_role):
     if server_role == "":
@@ -48,10 +63,11 @@ def get_web_content(url):
     return file_lines
 
 
-def get_specific_number_of_pages(number_of_pages = 0):
+def get_specific_number_of_pages():
     global server_role_filter
     global malware_family_filter
     servers = []
+    check_filtration()
 
     for page_number in range(0,int(number_of_pages) + 1):
 
@@ -63,7 +79,6 @@ def get_specific_number_of_pages(number_of_pages = 0):
         file = get_web_content(url)
         lexer = Lexer(file)
 
-        check_filtration()
         server_role_filter = convert_role(server_role_filter)
 
         parser = Parser(lexer, malware_family_filter, server_role_filter)
@@ -74,7 +89,7 @@ def get_specific_number_of_pages(number_of_pages = 0):
         else:
             servers = servers + parser.servers
 
-    output_file = open('Lista serverow.txt', 'w')
+    output_file = open(output_file_name, 'w')
     output_file.write('{"Serwers":[\n')
     for n, line in enumerate(servers):
         if n == len(servers) - 1:
@@ -104,6 +119,5 @@ def get_file_content():
 
 
 
-number_of_pages = input("Podaj liczbę stron, którą chcesz pobrać \n")
-get_specific_number_of_pages(number_of_pages)
+get_specific_number_of_pages()
 
